@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ForgotPasswordModal } from '@/components/forgot-password-modal';
 import { useToast } from '@/components/ui/use-toast';
+import { useAuth } from '@/context/authContext';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -24,22 +25,31 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+
+  const { login } = useAuth();
   const { toast } = useToast();
+  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      await login(email, password);
+
       toast({
         title: 'Login successful',
         description: 'Welcome to your admin dashboard',
       });
-      router.push('/dashboard');
-    }, 1500);
+    } catch (error) {
+      toast({
+        title: 'Login Failed',
+        description: 'Invalid credentials. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

@@ -10,7 +10,6 @@ export const metadata: Metadata = {
   title: 'Admin Dashboard',
   description:
     'Professional admin dashboard for managing feedback and products',
-  generator: 'v0.dev',
 };
 
 export default function RootLayout({
@@ -21,11 +20,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {children}
-        <Toaster />
+        <AuthProvider>
+          {children}
+          <Toaster />
+        </AuthProvider>
       </body>
     </html>
   );
 }
 
 import './globals.css';
+import { AuthProvider } from '@/context/authContext';

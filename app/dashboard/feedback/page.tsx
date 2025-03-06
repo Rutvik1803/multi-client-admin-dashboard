@@ -1,5 +1,6 @@
 import { FeedbackTable } from '@/components/feedback/feedback-table';
 import { GenerateFeedbackLinkButton } from '@/components/feedback/generate-feedback-link-button';
+import { ProtectedRoute } from '@/components/protected-route';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -9,12 +10,14 @@ export const metadata: Metadata = {
 
 export default function FeedbackPage() {
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">Manage Feedback</h1>
-        <GenerateFeedbackLinkButton />
+    <ProtectedRoute requiredPermissions={['feedback']}>
+      <div className="flex flex-col gap-5">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold tracking-tight">Manage Feedback</h1>
+          <GenerateFeedbackLinkButton />
+        </div>
+        <FeedbackTable />
       </div>
-      <FeedbackTable />
-    </div>
+    </ProtectedRoute>
   );
 }

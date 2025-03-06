@@ -1,3 +1,4 @@
+'use client';
 import {
   Card,
   CardContent,
@@ -5,9 +6,30 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { useAuth } from '@/context/authContext';
 import { BarChart3, MessageSquare, Package, Users } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function DashboardPage() {
+  const { user } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user) {
+      router.push('/login'); // Redirect if not logged in
+    } else if (user.role !== 'admin') {
+      // Redirect clients to their first allowed page
+      const firstPage =
+        user.permissions.length > 0
+          ? `/dashboard/${user.permissions[0]}`
+          : '/login';
+      router.push(firstPage);
+    }
+  }, [user, router]);
+
+  if (!user || user.role !== 'admin') return null;
+
   return (
     <div className="space-y-6">
       <div>
